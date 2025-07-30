@@ -1,0 +1,2513 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>בחינת מחלות עיניים</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+      display: flex;
+    }
+    
+    .sidebar {
+      width: 250px;
+      height: 100vh;
+      background-color: #fff;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+      overflow-y: auto;
+      position: fixed;
+      right: 0;
+      top: 0;
+      z-index: 100;
+      padding: 15px 10px;
+    }
+    
+    .sidebar-title {
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    .question-nav {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+	  padding-bottom: 25px;
+    }
+    
+    .nav-item {
+      text-align: center;
+      padding: 8px 0;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 15px;
+      background-color: white;
+    }
+    
+    .nav-item:hover {
+      background-color: #f0f0f0;
+    }
+    
+    .nav-item.active {
+      background-color: #4a90e2;
+      color: white;
+      border-color: #4a90e2;
+    }
+    
+    .nav-item.answered {
+      background-color: #e3f2fd;
+      border-color: #4a90e2;
+    }
+    
+.main-content {
+  margin-top: 60px;
+  margin-right: 350px;
+  padding: 50px;
+  max-width: 800px;
+  margin-left: auto;
+}
+    .question-container {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .question-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .question-number {
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+    .image-container {
+      text-align: center;
+      margin: 15px 0;
+    }
+    .image-container img {
+      max-width: 100%;
+      max-height: auto;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .option {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+    }
+    .option:hover {
+      background-color: #f9f9f9;
+    }
+    .option.selected {
+      border-color: #4a90e2;
+      background-color: #e3f2fd;
+    }
+    .option.correct {
+      border-color: #4caf50;
+      background-color: #e8f5e9;
+    }
+    .option.incorrect {
+      border-color: #f44336;
+      background-color: #ffebee;
+    }
+    .option-label {
+      font-weight: bold;
+      margin-left: 10px;
+      min-width: 20px;
+    }
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+    button {
+      padding: 8px 16px;
+      background-color: #4a90e2;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 0 5px;
+    }
+    button:hover {
+      background-color: #3f7fd1;
+    }
+    button:disabled {
+      background-color: #ddd;
+      cursor: not-allowed;
+    }
+    .score-container {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .score-title {
+      font-size: 1.2em;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .mode-toggle {
+      margin-bottom: 20px;
+    }
+    .multiple-images-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin: 15px 0;
+    }
+    .image-label {
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .finish-btn {
+      background-color: #4caf50;
+      font-weight: bold;
+      font-size: 1.1em;
+      padding: 10px 20px;
+    }
+    .finish-btn:hover {
+      background-color: #3d8b40;
+    }
+    .results-container {
+      display: none;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .results-title {
+      font-size: 1.5em;
+      font-weight: bold;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+    }
+    .result-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+    }
+    .result-item.correct {
+      background-color: #e8f5e9;
+      border-color: #4caf50;
+    }
+    .result-item.incorrect {
+      background-color: #ffebee;
+      border-color: #f44336;
+    }
+    .result-item.unanswered {
+      background-color: #f5f5f5;
+    }
+    .result-number {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .result-answer {
+      font-size: 1.2em;
+    }
+    .return-to-exam {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+    }
+    .results-summary {
+      margin: 20px 0;
+      padding: 15px;
+      background-color: #f0f8ff;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 1.2em;
+    }
+    @media print {
+      .no-print {
+        display: none;
+      }
+	    /* Mobile responsiveness */
+@media screen and (max-width: 768px) {
+  body {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: static;
+    padding: 10px 5px;
+    margin-bottom: 10px;
+  }
+  
+  .question-nav {
+    grid-template-columns: repeat(10, 1fr);
+    gap: 5px;
+  }
+  
+  .nav-item {
+    padding: 5px 0;
+    font-size: 12px;
+  }
+  
+  .main-content {
+    margin-right: 0;
+    padding: 15px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .question-container {
+    padding: 15px;
+  }
+  
+  .image-container img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .multiple-images-container {
+    flex-direction: column;
+  }
+  
+  .option {
+    padding: 8px;
+  }
+  
+  .option-label {
+    min-width: 15px;
+  }
+  
+  .controls {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .results-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+/* Small phones */
+@media screen and (max-width: 480px) {
+  .question-nav {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  
+  h1 {
+    font-size: 1.2em;
+  }
+  
+  .results-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Fix for iPhone and other mobile devices */
+@media screen and (max-width: 390px) {
+  .main-content {
+    padding: 10px;
+  }
+  
+  .question-container {
+    padding: 10px;
+  }
+  
+  button {
+    padding: 6px 12px;
+    font-size: 0.9em;
+  }
+}
+	    #save-exam-btn, #load-exam-btn, #clear-exam-btn {
+  margin: 0 5px;
+}
+
+@media screen and (max-width: 768px) {
+  #save-exam-btn, #load-exam-btn, #clear-exam-btn {
+    margin: 5px 0;
+    display: block;
+    width: 100%;
+  }
+}
+    }
+	  .control-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  border-bottom: 2px solid #ddd;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  z-index: 200;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  flex-wrap: wrap;
+}
+
+.control-panel button {
+  padding: 6px 12px;
+  font-size: 0.9em;
+}
+  </style>
+</head>
+<body>
+  <div class="sidebar no-print" id="sidebar">
+    <div class="sidebar-title">ניווט שאלות</div>
+    <div class="question-nav" id="question-nav">
+      <!-- Navigation buttons will be generated here -->
+    </div>
+  </div>
+  
+  <div class="main-content">
+    <h1>בחינת מחלות עיניים - שלב א' מועד 07.2025</h1>
+    
+<div class="control-panel no-print">
+  <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+    <button id="ophthalmology-index-btn" onclick="openOphthalmologyIndex()" style="background-color: #28a745; color: white; border: none; border-radius: 4px; padding: 6px 12px; font-size: 0.9em; cursor: pointer;">אינדקס מבחנים</button>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; flex-grow: 1;">
+      <button id="exam-mode-btn" onclick="setMode('exam')" disabled>מצב בחינה</button>
+      <button id="study-mode-btn" onclick="setMode('study')">מצב למידה</button>
+      <button id="save-exam-btn" onclick="saveExam()">שמור בחינה</button>
+      <button id="load-exam-btn" onclick="loadExam()">טען בחינה</button>
+      <button id="restart-exam-btn" onclick="restartExam()">התחל מחדש</button>
+      <button id="finish-btn" onclick="showResults()" class="finish-btn" style="display: none;">סיים בחינה</button>
+    </div>
+    <div style="width: 120px;"></div> <!-- Spacer to balance the layout -->
+  </div>
+</div>
+
+<div class="mode-toggle no-print">
+  <button id="toggle-answers-btn" onclick="toggleAnswers()" style="display: none;">הצג תשובות</button>
+</div>
+    
+    <div id="score-display" style="display: none;" class="score-container">
+      <div class="score-title">ציון</div>
+      <div id="score-text"></div>
+    </div>
+    
+    <div id="question-container" class="question-container">
+      <!-- Questions will be inserted here -->
+    </div>
+    
+    <div id="results-container" class="results-container">
+      <div class="results-title">סיכום תוצאות הבחינה (נא לשים לב, ישנן שאלות בהן התקבלו תשובות נוספות...)</div>
+      <div class="results-summary" id="results-summary"></div>
+      <div class="results-grid" id="results-grid"></div>
+      <button class="return-to-exam no-print" id="return-btn" onclick="returnToExam()">חזרה לבחינה</button>
+      <button class="return-to-exam no-print" id="print-btn" onclick="window.print()">הדפס תוצאות</button>
+    </div>
+    
+<div id="controls" class="controls no-print">
+  <button id="prev-btn" onclick="prevQuestion()" disabled>הקודם</button>
+  <div>
+    <button id="toggle-answers-btn-bottom" onclick="toggleAnswers()" style="display: none;">הצג תשובות</button>
+    <span id="question-counter"></span>
+    <button id="finish-btn" onclick="showResults()" class="finish-btn" style="display: none;">סיים בחינה</button>
+  </div>
+  <button id="next-btn" onclick="nextQuestion()">הבא</button>
+</div>
+   
+  
+  <script>
+    // Define the questions
+    const questions = [
+      [
+  {
+    "id": 6,
+    "text": "ילד בן 4 שנים. לאחרונה ההורים שמים לב ל\"בריחה\" של העין. בבדיקתו חדות ראייה 6/12 בכל עין. בתבחין כיסוי INTERMITTENT EXOTROPIA עם שליטה בינונית, לרחוק 30PD ולקרוב 25PD. רפרקציה ציקלופלגית 4.5+ בכל עין, קרקעית תקינה. מה מהבאים נכון לגבי ניהול מקרה זה?",
+    "options": {
+      "א": "מתן משקפיים לתיקון היפארופי חלקי וביקורת בעוד 3 חודשים, למדידה חוזרת של הפזילה.",
+      "ב": "יש להתקדם לניתוח RECESS AND RESECT בעין אחת, בהתאם למדידות.",
+      "ג": "יש לתת תיקון משקפיים מינוס 2.00 בכל עין.",
+      "ד": "יש להתקדם לניתוח BILATERAL LATERAL RECTUS RECESSION, בהתאם למדידות."
+    },
+    "correctAnswer": "א"
+  },
+  {
+    "id": 11,
+    "text": "חולה נבדק במרפאה ונמצאו הממצאים המתוארים בתמונה. כיצד יש להתקדם לאבחנה?",
+    "options": {
+      "א": "לחולה יש היפוטרופיה מימין, יש להשלים forced duction test.",
+      "ב": "לחולה יש היפרטרופיה מימין, יש להשלים בדיקת three step test.",
+      "ג": "לחולה יש היפוטרופיה מימין, יש להשלים בדיקת three step test.",
+      "ד": "לחולה יש היפרטרופיה משמאל, יש להשלים בדיקת Hess."
+    },
+    "image": "11-1.jpg",
+    "correctAnswer": "ב"
+  },
+  {
+    "id": 13,
+    "text": "ילדה סובלת מהמצב כמצולם בשתי העיניים. לא טופלה עד כה. בבדיקתה הלחמית הבולברית שקטה. הקרנית זכה וללא צביעה. בהתאם לתמונה המוצגת, מהו הטיפול העיקרי המומלץ בשלב זה?",
+    "options": {
+      "א": "טיפול מקומי בסטרואידים.",
+      "ב": "טיפול באנטיהיסטמינים טופיקליים.",
+      "ג": "טיפול אנטיביוטי ממשפחת קווינולונים דור 4.",
+      "ד": "תרופות מסוג STEROID SAPRING דוגמת טקרולימוס."
+    },
+    "image": "13-1.jpg",
+    "correctAnswer": "א"
+  },
+  {
+    "id": 71,
+    "text": "תינוק עם עיכוב התפתחותי, נשלח לבדיקת עיניים ומזוהים הממצאים הבאים בבדיקת הרשתיות. מה מהבאים נכון בהתייחס לממצא זה?",
+    "options": {
+      "א": "GM2 gangliosidosis.",
+      "ב": "מחלת Fabry.",
+      "ג": "תסמונת טריזומיה 18.",
+      "ד": "מחלת Stargardt."
+    },
+    "multipleImages": true,
+    "images": ["71-1.jpg", "71-2.jpg"],
+    "imageLabels": ["עין ימין", "עין שמאל"],
+    "correctAnswer": "א"
+  },
+  {
+    "id": 95,
+    "text": "  נערה מגיעה לבדיקה כשנה לאחר שעברה ניתוח להסרת גידול אינטרקרניאלי ולאחריו מתלוננת על כפל ראיה. בבדיקתה חדות ראיה 6/6 בכל עין. רפרקציה 0.5+ בכל עין. מקטעים קדמיים ואחוריים שקטים. בבדיקת תנועות עינים יש INFERIOR OBLIQUE OVER ACTION דו-צדדי. SUPERIOR OBLIQUE UNDER ACTION. בבדיקת DOUBLE MADOX ROD נמצא אקסציקלוטורשן בכל עין של 10 מעלות, סך-הכל 20 מעלות. אין פזילת גובה במבט פרימרי. קיים V-PATTERN כך שבמבט מטה יש איזוטרופיה של 20. במבט ישר איזופוריה של 10 ובמבט מעלה אין פזילה אופקית. הנערה מאמצת תנוחת ראש של CHIN-DOWN. מה מהבאים נכון בהתייחס לחולה זו?",
+    "options": {
+      "א": "אקסציקלוטורשן מוסבר על-ידי חולשת שרירים אלכסוניים תחתונים ובמקרה זה יש לעקוב בלבד.",
+      "ב": "אקסציקלוטורשן לא מסביר את כפל הראיה. לאור V-PATTERN יש לבצע הסטה של שרירים הוריזונטליים..",
+      "ג": "אקסציקלוטורשן מתאים לחולשת CN4 דו-צדדי ובמקרה זה יש לשקות ניתוח האראדה-איטו דו-צדדי .",
+      "ד": "אקסציקלוטורשן מתאים לחולשת CN4 דו-צדדי ובמקרה זה יש לשקול החלשת שרירים אלכסוניים תחתונים דו-צדדי."
+    },
+    "correctAnswer": "ג"
+  },
+  {
+    "id": 108,
+    "text": "הגיעה לטיפול נמרץ תינוקת בת 5 חודשים, מורדמת ומונשמת. אין פרטים אנמנסטיים וזוהה המראה הבא ברשתית. מה מהבאים נכון בהתייחס לתינוקת זו?",
+    "options": {
+      "א": "צפויים להיות דימומים פרנכימטיים במוח בלבד.",
+      "ב": "צפויים להיות דימומים סובדורליים וסוב-ארכנואידליים.",
+      "ג": "צפוי רטינוסכיזיס היקפי.",
+      "ד": "בדרך כלל המצב חד-צדדי."
+    },
+    "image": "108-1.jpg",
+    "correctAnswer": "ב"
+  },
+  {
+    "id": 110,
+    "text": "תינוק בן שבוע מופנה למרפאה בשל רפלקס אדום לא תקין בעין ימין שאובחן בבדיקת רופא ילדים. ברטינוסקופיה לפני הרחבת אישונים נצפית עכירות מרכזית מימין שלא מסתירה את ציר הראיה בקוטר 1mm. לאחר הרחבת אישונים ניתן לזהות, בבדיקה במנורת סדק שמדובר בירוד פולארי קדמי חד צדדי. פונדוס תקין בשתי העיניים. בהתייחסצלנתונים שלעיל, איזה מההיגדים הבאים הוא הנכון ביותר?. מהי האבחנה הסבירה ביותר?",
+    "options": {
+      "א": "ירוד חד צדדי גורם לאמבליופיה עמוקה ודורש ניתוח דחוף כבר בגיל 64 שבועות.",
+      "ב": "ירוד פולארי קטן לא גורם בדרך כלל לאמבליופיה ולכן לא נדרש מעקב מיוחד .",
+      "ג": "במצב זה עלולה להיות אנאיזומטרטפיה וחשוב לעקוב אחרי רפרקציה, בנוסף למעקב אחרי הירוד.",
+      "ד": "יש לעקוב אחרי הירוד כדי לוודא שלא מחמיר וגדל."
+    },
+    "correctAnswer": "ג"
+  },
+  {
+    "id": 112,
+    "text": "איזה מההיגדים הבאים נכון לגבי פזילה שניונית secondary deviation?",
+    "options": {
+      "א": "פזילה קטנה יותר מפזילה ראשונית על רקע פזילה מולדת ומוסברת על-ידי חוק SHERRINGTON.",
+      "ב": "פזילה גדולה יותר מפזילה ראשונית על רקע שיתוק עצבי חלקי או מלא ומוסברת על ידי חוק HERING .",
+      "ג": "פזילה גדולה יותר מפזילה ראשונית על רקע פזילה מולדת ומוסברת על-ידי חוק SHERRINGTON.",
+      "ד": "פזילה קטנה יותר מפזילה ראשונית על רקע שיתוק עצבי חלקי או מלא ומוסברת על ידי חוק HERING."
+    },
+    "correctAnswer": "ב"
+  },
+  {
+    "id": 114,
+    "text": "ילדה בריאה בת 3 שנים מגיעה לבדיקה. תנועות העיניים שלה מודגמות בסרטון. איזה מההיגדים הבאים נכון לגבי המצב המתואר. https://media.examapp.co.il/301709/zmyaxjam-1.webm",
+    "options": {
+      "א": "יש להחליש את ה-SUPERIOR OBLIQUE בצד שמאל.",
+      "ב": "הטיית ראש בולטת מצביעה על צורך בניתוח.",
+      "ג": "הגבלה בהרמה ב- FORCED DUCTION TEST מחייבת ניתוח בגיל צעיר.",
+      "ד": "דפוס A מעיד על הגבלה בתנועה עקב TIGHT SUPERIOR OBLIQUE."
+    },
+    "correctAnswer": "ב"
+  },
+  {
+    "id": 115,
+    "text": "בבדיקה שגרתית של תינוק נראתה קרנית גדולה. באיה מהמקרים הבאים נכון לבסס אבחנה של גלאוקומה?",
+    "options": {
+      "א": "תינוק בן חודש, קרנית בקוטר 10.5mm, לחץ תוך עיני 25mmHg.",
+      "ב": "תינוק בן 6 חודשים, קרנית בקוטר 11.5mm, לחץ 23mmHg .",
+      "ג": "תינוק בן שנה וחצי, קרנית בקוטר 11.5mm, לחץ 25mmHg.",
+      "ד": "תינוק בן חודשיים, קרנית בקוטר 10.5mm, לחץ 23mmHg."
+    },
+    "image": "115-1.jpg",
+    "correctAnswer": "ב"
+  }
+      
+      // ... rest of the questions remain the same
+    ];
+    
+  // Variables to track state
+    let currentQuestionIndex = 0;
+    let selectedAnswers = {};
+    let showingAnswers = false;
+    let mode = 'exam';
+    
+    // Initialize the application
+    function init() {
+      renderCurrentQuestion();
+      updateControls();
+    }
+    
+    // Render the current question
+    function renderCurrentQuestion() {
+      if (mode === 'exam') {
+        renderExamQuestion();
+      } else {
+        renderStudyMode();
+      }
+    }
+    
+    function renderExamQuestion() {
+      const question = questions[currentQuestionIndex];
+      const questionContainer = document.getElementById('question-container');
+      
+      let questionHTML = `
+        <div class="question-header">
+          <div class="question-number">שאלה ${question.id} מתוך ${questions.length}</div>
+        </div>
+        <div class="question-text">${question.text}</div>
+      `;
+      
+      if (question.image) {
+        questionHTML += `
+          <div class="image-container">
+            <img src="/07-2025/images/${question.image}" alt="תמונה לשאלה ${question.id}">
+          </div>
+        `;
+      } else if (question.multipleImages) {
+        questionHTML += `<div class="multiple-images-container">`;
+        for (let i = 0; i < question.images.length; i++) {
+          questionHTML += `
+            <div class="image-container">
+              <div class="image-label">${question.imageLabels[i]}</div>
+              <img src="/07-2025/images/${question.images[i]}" alt="תמונה ${i+1} לשאלה ${question.id}">
+            </div>
+          `;
+        }
+        questionHTML += `</div>`;
+      }
+      
+      questionHTML += '<div class="options">';
+      
+      Object.entries(question.options).forEach(([key, value]) => {
+        const isSelected = selectedAnswers[question.id] === key;
+        const isCorrect = showingAnswers && key === question.correctAnswer;
+        const isIncorrect = showingAnswers && isSelected && key !== question.correctAnswer;
+        
+        let optionClass = "option";
+        if (isSelected) optionClass += " selected";
+        if (isCorrect) optionClass += " correct";
+        if (isIncorrect) optionClass += " incorrect";
+        
+        questionHTML += `
+          <div class="${optionClass}" onclick="selectAnswer(${question.id}, '${key}')">
+            <div class="option-label">${key}</div>
+            <div class="option-text">${value}</div>
+          </div>
+        `;
+      });
+      
+      questionHTML += '</div>';
+      
+      questionContainer.innerHTML = questionHTML;
+      
+      // Update question counter
+      document.getElementById('question-counter').textContent = `${currentQuestionIndex + 1} / ${questions.length}`;
+      
+      // Show Finish button only on the last question
+      document.getElementById('finish-btn').style.display = 
+        currentQuestionIndex === questions.length - 1 ? 'inline-block' : 'none';
+    }
+    
+    function renderStudyMode() {
+      const questionContainer = document.getElementById('question-container');
+      let allQuestionsHTML = '';
+      
+      questions.forEach(question => {
+        let questionHTML = `
+          <div class="question-container">
+            <div class="question-header">
+              <div class="question-number">שאלה ${question.id}</div>
+            </div>
+            <div class="question-text">${question.text}</div>
+        `;
+        
+        if (question.image) {
+          questionHTML += `
+            <div class="image-container">
+              <img src="/07-2025/images/${question.image}" alt="תמונה לשאלה ${question.id}">
+            </div>
+          `;
+        } else if (question.multipleImages) {
+          questionHTML += `<div class="multiple-images-container">`;
+          for (let i = 0; i < question.images.length; i++) {
+            questionHTML += `
+              <div class="image-container">
+                <div class="image-label">${question.imageLabels[i]}</div>
+                <img src="/07-2025/images/${question.images[i]}" alt="תמונה ${i+1} לשאלה ${question.id}">
+              </div>
+            `;
+          }
+          questionHTML += `</div>`;
+        }
+        
+        questionHTML += '<div class="options">';
+        
+        Object.entries(question.options).forEach(([key, value]) => {
+          const isCorrect = key === question.correctAnswer;
+          
+          let optionClass = "option";
+          if (isCorrect) optionClass += " correct";
+          
+          questionHTML += `
+            <div class="${optionClass}">
+              <div class="option-label">${key}</div>
+              <div class="option-text">${value}</div>
+            </div>
+          `;
+        });
+        
+        questionHTML += '</div></div>';
+        allQuestionsHTML += questionHTML;
+      });
+      
+      questionContainer.innerHTML = allQuestionsHTML;
+      
+      // Hide navigation controls in study mode
+      document.getElementById('controls').style.display = 'none';
+    }
+    
+    // Handle selecting an answer
+    function selectAnswer(questionId, answer) {
+      if (showingAnswers) return;
+      
+      selectedAnswers[questionId] = answer;
+      renderCurrentQuestion();
+	    autoSaveExamState();
+	    autoSaveProgress();
+
+    }
+    
+    // Navigation functions
+    // Updated nextQuestion function
+function nextQuestion() {
+  if (currentQuestionIndex < questions.length - 1) {
+    currentQuestionIndex++;
+    resetShowingAnswers(); // Use the helper function
+    renderCurrentQuestion();
+    updateControls();
+	  autoSaveExamState();
+  }
+}
+    
+    // Updated prevQuestion function
+function prevQuestion() {
+  if (currentQuestionIndex > 0) {
+    currentQuestionIndex--;
+    resetShowingAnswers(); // Use the helper function
+    renderCurrentQuestion();
+    updateControls();
+	  autoSaveExamState();
+  }
+}
+
+	  // Create a helper function to reset showing answers state
+function resetShowingAnswers() {
+  showingAnswers = false;
+  const btn = document.getElementById('toggle-answers-btn');
+  if (btn) btn.textContent = 'הצג תשובות';
+  document.getElementById('score-display').style.display = 'none';
+}
+    // Update navigation button states
+    function updateControls() {
+      const prevBtn = document.getElementById('prev-btn');
+      const nextBtn = document.getElementById('next-btn');
+      
+      prevBtn.disabled = currentQuestionIndex === 0;
+      nextBtn.disabled = currentQuestionIndex === questions.length - 1;
+      
+      if (mode === 'study') {
+        document.getElementById('controls').style.display = 'none';
+        document.getElementById('toggle-answers-btn').style.display = 'none';
+	document.getElementById('toggle-answers-btn-bottom').style.display = 'none';
+        document.getElementById('sidebar').style.display = 'none';
+      } else {
+        document.getElementById('controls').style.display = 'flex';
+        document.getElementById('toggle-answers-btn').style.display = 'inline-block';
+	document.getElementById('toggle-answers-btn-bottom').style.display = 'inline-block';
+        document.getElementById('sidebar').style.display = 'block';
+      }
+      
+      // Update the active question in the sidebar
+      updateSidebarNavigation();
+    }
+    
+    // Generate and update the sidebar navigation
+    // Updated generateSidebarNavigation function
+// Generate and update the sidebar navigation
+function generateSidebarNavigation() {
+  const navContainer = document.getElementById('question-nav');
+  navContainer.innerHTML = '';
+  
+  // Create buttons for all questions
+  for (let i = 0; i < questions.length; i++) {
+    const navItem = document.createElement('div');
+    navItem.className = 'nav-item';
+    navItem.textContent = i + 1;
+    navItem.addEventListener('click', function() {
+      changeQuestion(i); // Use the new helper function
+    });
+    
+    navContainer.appendChild(navItem);
+  }
+}
+    
+    // Update the sidebar navigation to highlight current question
+    function updateSidebarNavigation() {
+      if (mode === 'study') return;
+      
+      const navItems = document.querySelectorAll('.nav-item');
+      
+      navItems.forEach((item, index) => {
+        // Remove all special classes first
+        item.classList.remove('active', 'answered');
+        
+        // Add appropriate classes
+        if (index === currentQuestionIndex) {
+          item.classList.add('active');
+        }
+        
+        // Mark questions that have been answered
+        if (selectedAnswers[index + 1]) {
+          item.classList.add('answered');
+        }
+      });
+    }
+    
+    // Toggle showing answers
+function toggleAnswers() {
+  showingAnswers = !showingAnswers;
+  
+  const btn = document.getElementById('toggle-answers-btn');
+  const btnBottom = document.getElementById('toggle-answers-btn-bottom');
+  const newText = showingAnswers ? 'הסתר תשובות' : 'הצג תשובות';
+  
+  btn.textContent = newText;
+  btnBottom.textContent = newText;
+  
+  if (showingAnswers) {
+    calculateAndShowScore();
+  } else {
+    document.getElementById('score-display').style.display = 'none';
+  }
+  
+  renderCurrentQuestion();
+}
+    
+    // Calculate and display score
+    function calculateAndShowScore() {
+      let correct = 0;
+      let total = Object.keys(selectedAnswers).length;
+      
+      Object.entries(selectedAnswers).forEach(([questionId, answer]) => {
+        const question = questions.find(q => q.id === parseInt(questionId));
+        if (question && answer === question.correctAnswer) {
+          correct++;
+        }
+      });
+      
+      const scoreDisplay = document.getElementById('score-display');
+      const scoreText = document.getElementById('score-text');
+      
+      scoreText.textContent = `נכון: ${correct} מתוך ${total} (${total > 0 ? Math.round((correct / total) * 100) : 0}%)`;
+      scoreDisplay.style.display = 'block';
+      
+      return { correct, total };
+    }
+    
+    // Show results summary
+    function showResults() {
+      // Calculate the score
+      const { correct, total } = calculateResultsData();
+      const percentage = total > 0 ? Math.round((correct / total) * 100) : 0;
+      
+      // Get elements
+      const questionContainer = document.getElementById('question-container');
+      const resultsContainer = document.getElementById('results-container');
+      const resultsGrid = document.getElementById('results-grid');
+      const resultsSummary = document.getElementById('results-summary');
+      const controls = document.getElementById('controls');
+      const sidebar = document.getElementById('sidebar');
+      
+      // Hide the question and show results
+      questionContainer.style.display = 'none';
+      resultsContainer.style.display = 'block';
+      controls.style.display = 'none';
+      sidebar.style.display = 'none';
+      
+      // Create the results summary text
+      resultsSummary.innerHTML = `
+        <strong>תשובות נכונות:</strong> ${correct} מתוך ${questions.length} (${percentage}%)<br>
+        <strong>תשובות שגויות:</strong> ${total - correct}<br>
+        <strong>שאלות ללא מענה:</strong> ${questions.length - total}
+      `;
+      
+      // Clear and populate the results grid
+      resultsGrid.innerHTML = '';
+      
+      // Create a grid with all questions
+      for (let i = 0; i < questions.length; i++) {
+        const question = questions[i];
+        const selectedAnswer = selectedAnswers[question.id];
+        
+        let itemClass = 'result-item';
+        if (!selectedAnswer) {
+          itemClass += ' unanswered';
+        } else if (selectedAnswer === question.correctAnswer) {
+          itemClass += ' correct';
+        } else {
+          itemClass += ' incorrect';
+        }
+        
+        const resultItem = document.createElement('div');
+        resultItem.className = itemClass;
+        resultItem.innerHTML = `
+          <div class="result-number">${question.id}</div>
+          <div class="result-answer">${selectedAnswer || '-'}</div>
+        `;
+        
+        // Add click event to jump to that question
+        resultItem.addEventListener('click', function() {
+          returnToExam(question.id - 1);
+        });
+        
+        resultsGrid.appendChild(resultItem);
+      }
+    }
+    
+    // Calculate results data
+    function calculateResultsData() {
+      let correct = 0;
+      let total = Object.keys(selectedAnswers).length;
+      
+      Object.entries(selectedAnswers).forEach(([questionId, answer]) => {
+        const question = questions.find(q => q.id === parseInt(questionId));
+        if (question && answer === question.correctAnswer) {
+          correct++;
+        }
+      });
+      
+      return { correct, total };
+    }
+    
+    // Return to the exam
+function returnToExam(questionIndex = null) {
+  // If a question index is provided, go to that question
+  if (questionIndex !== null) {
+    changeQuestion(questionIndex);
+  } else {
+    // Otherwise just close the results panel
+    document.getElementById('results-container').style.display = 'none';
+    document.getElementById('question-container').style.display = 'block';
+    document.getElementById('controls').style.display = 'flex';
+    renderCurrentQuestion();
+    updateControls();
+  }
+}
+  
+  resetShowingAnswers(); // Use the helper function
+  
+  // Hide results and show question
+  document.getElementById('results-container').style.display = 'none';
+  document.getElementById('question-container').style.display = 'block';
+  document.getElementById('controls').style.display = 'flex';
+  
+  // Update the current question
+  renderCurrentQuestion();
+  updateControls();
+
+        // Set the mode (exam or study) adding link to main index
+function openOphthalmologyIndex() {
+  window.open('https://israeliumd.github.io/ophthalmology-index/', '_blank');
+}
+    // Set the mode (exam or study)
+    function setMode(newMode) {
+      mode = newMode;
+      
+      const examBtn = document.getElementById('exam-mode-btn');
+      const studyBtn = document.getElementById('study-mode-btn');
+      const toggleAnswersBtn = document.getElementById('toggle-answers-btn');
+      
+      if (mode === 'exam') {
+        examBtn.disabled = true;
+        studyBtn.disabled = false;
+        toggleAnswersBtn.style.display = 'inline-block';
+        document.getElementById('score-display').style.display = 'none';
+        document.getElementById('results-container').style.display = 'none';
+        document.getElementById('question-container').style.display = 'block';
+        showingAnswers = false;
+        toggleAnswersBtn.textContent = 'הצג תשובות';
+      } else {
+        examBtn.disabled = false;
+        studyBtn.disabled = true;
+        toggleAnswersBtn.style.display = 'none';
+        document.getElementById('score-display').style.display = 'none';
+      }
+      
+      renderCurrentQuestion();
+      updateControls();
+    }
+    // Save exam progress
+// Save exam progress as JSON file (manual save)
+function saveExam() {
+  const examData = {
+    currentQuestionIndex: currentQuestionIndex,
+    selectedAnswers: selectedAnswers,
+    timestamp: new Date().toISOString(),
+    examTitle: "בחינת מחלות עיניים - שלב א' מועד 07.2025"
+  };
+  
+  // Create and download JSON file
+  const dataStr = JSON.stringify(examData, null, 2);
+  const dataBlob = new Blob([dataStr], {type: 'application/json'});
+  
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(dataBlob);
+  link.download = 'exam-progress-07-2025.json';
+  link.click();
+  
+  // Show confirmation
+  const btn = document.getElementById('save-exam-btn');
+  const originalText = btn.textContent;
+  btn.textContent = 'נשמר!';
+  btn.style.backgroundColor = '#4caf50';
+  
+  setTimeout(() => {
+    btn.textContent = originalText;
+    btn.style.backgroundColor = '#4a90e2';
+  }, 2000);
+}
+
+// Load exam progress from JSON file
+function loadExam() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  
+  input.onchange = function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const examData = JSON.parse(e.target.result);
+        
+        // Restore progress
+        currentQuestionIndex = examData.currentQuestionIndex || 0;
+        selectedAnswers = examData.selectedAnswers || {};
+        
+        // Update display
+        renderCurrentQuestion();
+        updateControls();
+        autoSaveProgress(); // Save to browser memory too
+        
+        // Show confirmation
+        const btn = document.getElementById('load-exam-btn');
+        const originalText = btn.textContent;
+        btn.textContent = 'נטען!';
+        btn.style.backgroundColor = '#4caf50';
+        
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.style.backgroundColor = '#4a90e2';
+        }, 2000);
+        
+      } catch (error) {
+        alert('שגיאה בקריאת קובץ הבחינה');
+      }
+    };
+    reader.readAsText(file);
+  };
+  
+  input.click();
+}
+
+// Auto-save to browser memory (happens automatically)
+function autoSaveProgress() {
+  const examData = {
+    currentQuestionIndex: currentQuestionIndex,
+    selectedAnswers: selectedAnswers,
+    timestamp: new Date().toISOString()
+  };
+  localStorage.setItem('examProgress-07-2025-auto', JSON.stringify(examData));
+}
+
+// Auto-load from browser memory when page loads
+function autoLoadProgress() {
+  const savedData = localStorage.getItem('examProgress-07-2025-auto');
+  if (savedData) {
+    try {
+      const examData = JSON.parse(savedData);
+      currentQuestionIndex = examData.currentQuestionIndex || 0;
+      selectedAnswers = examData.selectedAnswers || {};
+    } catch (e) {
+      // If there's an error, just start fresh
+    }
+  }
+}
+
+// Restart exam
+function restartExam() {
+  if (confirm('האם אתה בטוח שברצונך להתחיל מחדש? כל התשובות יימחקו.')) {
+    currentQuestionIndex = 0;
+    selectedAnswers = {};
+    showingAnswers = false;
+    
+    // Reset UI
+    document.getElementById('toggle-answers-btn').textContent = 'הצג תשובות';
+    document.getElementById('score-display').style.display = 'none';
+    document.getElementById('results-container').style.display = 'none';
+    document.getElementById('question-container').style.display = 'block';
+    
+    renderCurrentQuestion();
+    updateControls();
+  }
+}
+    // Initialize the app when the page loads
+window.onload = function() {
+  autoLoadProgress(); // Load previous progress automatically
+  generateSidebarNavigation();
+  init();
+}
+
+	// Add this code right before the closing +script+ tag in your HTML file
+
+// Object to store notes for each question
+let questionNotes = {};
+let notesVisible = false;
+
+// Load notes from localStorage when the page loads
+// Modify the loadNotes and saveNotes functions to use more explicit exam identifiers
+// Auto-save functionality
+function autoSaveExamState() {
+  const examId = window.location.pathname.split('/').filter(Boolean).join('-');
+  const finalExamId = examId || document.title.replace(/\s+/g, '-').toLowerCase();
+  
+  const examState = {
+    selectedAnswers: selectedAnswers,
+    currentQuestionIndex: currentQuestionIndex,
+    timestamp: new Date().toISOString(),
+    examId: finalExamId,
+    examTitle: document.title
+  };
+  
+  localStorage.setItem(`examState-${finalExamId}`, JSON.stringify(examState));
+}
+
+// Load exam state from LocalStorage
+function loadExamState() {
+  const examId = window.location.pathname.split('/').filter(Boolean).join('-');
+  const finalExamId = examId || document.title.replace(/\s+/g, '-').toLowerCase();
+  
+  const savedState = localStorage.getItem(`examState-${finalExamId}`);
+  
+  if (savedState) {
+    try {
+      const state = JSON.parse(savedState);
+      
+      const savedDate = new Date(state.timestamp);
+      const dateString = savedDate.toLocaleString('he-IL', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+      
+      const answeredCount = Object.keys(state.selectedAnswers).length;
+      const message = `נמצאה בחינה שמורה מתאריך ${dateString}\nענית על ${answeredCount} שאלות מתוך ${questions.length}\n\nהאם ברצונך להמשיך מהמקום בו הפסקת?`;
+      
+      if (confirm(message)) {
+        selectedAnswers = state.selectedAnswers;
+        currentQuestionIndex = state.currentQuestionIndex;
+        renderCurrentQuestion();
+        updateControls();
+        updateSidebarNavigation();
+        return true;
+      }
+    } catch (e) {
+      console.error('Error loading saved state:', e);
+    }
+  }
+  
+  return false;
+}
+
+// Download exam state as JSON file
+function downloadExamState() {
+  const examState = {
+    selectedAnswers: selectedAnswers,
+    currentQuestionIndex: currentQuestionIndex,
+    timestamp: new Date().toISOString(),
+    examTitle: document.title,
+    questionNotes: questionNotes
+  };
+  
+  const dataStr = JSON.stringify(examState, null, 2);
+  const dataBlob = new Blob([dataStr], { type: 'application/json' });
+  
+  const fileName = `exam-save-${new Date().toISOString().split('T')[0]}.json`;
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(dataBlob);
+  link.download = fileName;
+  
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  
+  showSaveConfirmation('הבחינה נשמרה כקובץ');
+}
+
+// Upload and load exam state from file
+function uploadExamState() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  
+  input.onchange = function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const state = JSON.parse(e.target.result);
+        
+        if (!state.selectedAnswers || typeof state.currentQuestionIndex !== 'number') {
+          alert('קובץ לא תקין');
+          return;
+        }
+        
+        selectedAnswers = state.selectedAnswers || {};
+        currentQuestionIndex = state.currentQuestionIndex || 0;
+        
+        if (state.questionNotes) {
+          questionNotes = state.questionNotes;
+          saveNotes();
+        }
+        
+        renderCurrentQuestion();
+        updateControls();
+        updateSidebarNavigation();
+        
+        showSaveConfirmation('הבחינה נטענה בהצלחה');
+      } catch (e) {
+        alert('שגיאה בטעינת הקובץ');
+      }
+    };
+    
+    reader.readAsText(file);
+  };
+  
+  input.click();
+}
+
+// Show save confirmation message
+function showSaveConfirmation(message = 'הבחינה נשמרה') {
+  const confirmation = document.createElement('div');
+  confirmation.style.cssText = `
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    z-index: 10000;
+    font-family: Arial, sans-serif;
+  `;
+  confirmation.textContent = message;
+  document.body.appendChild(confirmation);
+  
+  setTimeout(() => {
+    confirmation.remove();
+  }, 2000);
+}
+
+// Clear saved exam state
+function clearExamState() {
+  if (confirm('האם אתה בטוח שברצונך למחוק את ההתקדמות השמורה ולהתחיל מחדש?')) {
+    const examId = window.location.pathname.split('/').filter(Boolean).join('-');
+    const finalExamId = examId || document.title.replace(/\s+/g, '-').toLowerCase();
+    
+    localStorage.removeItem(`examState-${finalExamId}`);
+    selectedAnswers = {};
+    currentQuestionIndex = 0;
+    renderCurrentQuestion();
+    updateControls();
+    updateSidebarNavigation();
+    
+    showSaveConfirmation('הבחינה אופסה');
+  }
+}
+// Load notes from localStorage when the page loads
+function loadNotes() {
+  // Create a more specific exam identifier based on the URL path
+  const examId = window.location.pathname.split('/').filter(Boolean).join('-');
+  
+  // If there's no specific path, use the title as fallback
+  const finalExamId = examId || document.title.replace(/\s+/g, '-').toLowerCase();
+  
+  console.log(`Loading notes for exam: ${finalExamId}`); // For debugging
+  
+  const savedNotes = localStorage.getItem(`examNotes-${finalExamId}`);
+  
+  if (savedNotes) {
+    try {
+      questionNotes = JSON.parse(savedNotes);
+    } catch (e) {
+      questionNotes = {};
+    }
+  } else {
+    questionNotes = {};
+  }
+}
+
+function saveNotes() {
+  // Use the same identifier creation logic as in loadNotes
+  const examId = window.location.pathname.split('/').filter(Boolean).join('-');
+  const finalExamId = examId || document.title.replace(/\s+/g, '-').toLowerCase();
+  
+  localStorage.setItem(`examNotes-${finalExamId}`, JSON.stringify(questionNotes));
+  console.log(`Saving notes for exam: ${finalExamId}`); // For debugging
+}
+// Add the left sidebar notes panel
+function addNotesPanel() {
+  // Create notes toggle button at the top left
+  const toggleButton = document.createElement('button');
+  toggleButton.id = 'toggle-notes-btn';
+  toggleButton.textContent = 'פתח הערות';
+  toggleButton.style.position = 'fixed';
+  toggleButton.style.top = '10px';
+  toggleButton.style.left = '10px';
+  toggleButton.style.zIndex = '1000';
+  toggleButton.style.padding = '8px 16px';
+  toggleButton.style.backgroundColor = '#4a90e2';
+  toggleButton.style.color = 'white';
+  toggleButton.style.border = 'none';
+  toggleButton.style.borderRadius = '4px';
+  toggleButton.style.cursor = 'pointer';
+  toggleButton.style.fontFamily = 'Arial, sans-serif';
+  toggleButton.onclick = toggleNotes;
+  
+  // Create the notes sidebar
+  const notesSidebar = document.createElement('div');
+  notesSidebar.id = 'notes-sidebar';
+  notesSidebar.style.width = '300px';
+  notesSidebar.style.height = '100vh';
+  notesSidebar.style.position = 'fixed';
+  notesSidebar.style.top = '0';
+  notesSidebar.style.left = '0';
+  notesSidebar.style.backgroundColor = '#f8f8f8';
+  notesSidebar.style.boxShadow = '2px 0 5px rgba(0,0,0,0.1)';
+  notesSidebar.style.padding = '60px 20px 20px 20px';
+  notesSidebar.style.overflowY = 'auto';
+  notesSidebar.style.zIndex = '900';
+  notesSidebar.style.transform = 'translateX(-100%)';
+  notesSidebar.style.transition = 'transform 0.3s ease-in-out';
+  
+  // Create the notes title
+  const notesTitle = document.createElement('div');
+  notesTitle.textContent = 'הערות לשאלה';
+  notesTitle.style.fontWeight = 'bold';
+  notesTitle.style.fontSize = '1.2em';
+  notesTitle.style.marginBottom = '10px';
+  notesTitle.style.textAlign = 'center';
+  notesTitle.style.fontFamily = 'Arial, sans-serif';
+  notesSidebar.appendChild(notesTitle);
+  
+  // Create close button inside the sidebar
+  const closeButton = document.createElement('button');
+  closeButton.textContent = 'סגור';
+  closeButton.style.position = 'absolute';
+  closeButton.style.top = '15px';
+  closeButton.style.right = '15px';
+  closeButton.style.padding = '5px 10px';
+  closeButton.style.backgroundColor = '#e0e0e0';
+  closeButton.style.border = 'none';
+  closeButton.style.borderRadius = '4px';
+  closeButton.style.cursor = 'pointer';
+  closeButton.style.fontFamily = 'Arial, sans-serif';
+  closeButton.onclick = closeNotes;
+  notesSidebar.appendChild(closeButton);
+  
+  // Create the notes content div
+  const notesContent = document.createElement('div');
+  notesContent.id = 'notes-content';
+  notesSidebar.appendChild(notesContent);
+  
+  // Add elements to the body
+  document.body.appendChild(toggleButton);
+  document.body.appendChild(notesSidebar);
+}
+
+// Toggle the notes panel visibility
+function toggleNotes() {
+  const notesSidebar = document.getElementById('notes-sidebar');
+  const toggleButton = document.getElementById('toggle-notes-btn');
+  
+  if (notesVisible) {
+    closeNotes();
+  } else {
+    notesSidebar.style.transform = 'translateX(0)';
+    toggleButton.textContent = 'סגור הערות';
+    notesVisible = true;
+    updateNotesContent();
+  }
+}
+
+// Close the notes panel
+function closeNotes() {
+  const notesSidebar = document.getElementById('notes-sidebar');
+  const toggleButton = document.getElementById('toggle-notes-btn');
+  
+  notesSidebar.style.transform = 'translateX(-100%)';
+  toggleButton.textContent = 'פתח הערות';
+  notesVisible = false;
+}
+
+// Update the notes content based on the current question
+function updateNotesContent() {
+  if (!notesVisible) return;
+  
+  const notesContent = document.getElementById('notes-content');
+  const question = questions[currentQuestionIndex];
+  const questionId = question.id;
+  
+  // Clear previous content
+  notesContent.innerHTML = '';
+  
+  // Create the question number display
+  const questionNumber = document.createElement('div');
+  questionNumber.textContent = `שאלה ${questionId}`;
+  questionNumber.style.fontWeight = 'bold';
+  questionNumber.style.marginBottom = '10px';
+  questionNumber.style.textAlign = 'center';
+  questionNumber.style.fontFamily = 'Arial, sans-serif';
+  notesContent.appendChild(questionNumber);
+  
+  // Create the notes textarea
+  const notesTextarea = document.createElement('textarea');
+  notesTextarea.id = `notes-${questionId}`;
+  notesTextarea.value = questionNotes[questionId] || '';
+  notesTextarea.placeholder = 'רשום את ההערות שלך כאן...';
+  notesTextarea.style.width = '100%';
+  notesTextarea.style.height = 'calc(100vh - 150px)';
+  notesTextarea.style.padding = '10px';
+  notesTextarea.style.borderRadius = '4px';
+  notesTextarea.style.border = '1px solid #ddd';
+  notesTextarea.style.fontFamily = 'Arial, sans-serif';
+  notesTextarea.style.fontSize = '1em';
+  notesTextarea.style.direction = 'rtl';
+  notesTextarea.style.resize = 'none';
+  notesTextarea.style.boxSizing = 'border-box';
+  
+  // Add event listener to save notes when text changes
+  notesTextarea.addEventListener('input', function() {
+    questionNotes[questionId] = this.value;
+    saveNotes();
+    updateNavIndicators();
+  });
+  
+  notesContent.appendChild(notesTextarea);
+}
+
+// Add notes to study mode
+function addNotesToStudyMode() {
+  const questionContainers = document.querySelectorAll('.question-container');
+  questionContainers.forEach(container => {
+    const questionNumberElem = container.querySelector('.question-number');
+    if (questionNumberElem) {
+      const questionIdMatch = questionNumberElem.textContent.match(/\d+/);
+      if (questionIdMatch) {
+        const questionId = parseInt(questionIdMatch[0]);
+        const questionNoteText = questionNotes[questionId] || '';
+        
+        // Remove any existing notes container
+        const existingNotes = container.querySelector('.study-notes-container');
+        if (existingNotes) {
+          existingNotes.remove();
+        }
+        
+        // Add notes container if there are notes
+        if (questionNoteText.trim()) {
+          const notesContainer = document.createElement('div');
+          notesContainer.className = 'study-notes-container';
+          notesContainer.style.marginTop = '20px';
+          notesContainer.style.padding = '10px';
+          notesContainer.style.backgroundColor = '#f0f8ff';
+          notesContainer.style.borderRadius = '8px';
+          notesContainer.style.border = '1px solid #b0c4de';
+          
+          notesContainer.innerHTML = `
+            <div style="font-weight: bold; margin-bottom: 5px; font-family: Arial, sans-serif;">הערות אישיות:</div>
+            <div style="padding: 10px; border: 1px solid #ddd; border-radius: 4px; background-color: #fff; direction: rtl; white-space: pre-wrap; font-family: Arial, sans-serif;">
+              ${questionNoteText}
+            </div>
+          `;
+          
+          container.appendChild(notesContainer);
+        }
+      }
+    }
+  });
+}
+
+// Add indicators to navigation buttons for questions with notes
+function updateNavIndicators() {
+  const navItems = document.querySelectorAll('.nav-item');
+  
+  navItems.forEach((item, index) => {
+    const questionId = index + 1;
+    
+    // Remove any existing indicators
+    const existingIndicator = item.querySelector('.note-indicator');
+    if (existingIndicator) {
+      existingIndicator.remove();
+    }
+    
+    // Add indicator if there are notes for this question
+    if (questionNotes[questionId] && questionNotes[questionId].trim() !== '') {
+      const indicator = document.createElement('div');
+      indicator.className = 'note-indicator';
+      indicator.style.position = 'absolute';
+      indicator.style.top = '3px';
+      indicator.style.right = '3px';
+      indicator.style.width = '6px';
+      indicator.style.height = '6px';
+      indicator.style.borderRadius = '50%';
+      indicator.style.backgroundColor = '#ff9800';
+      
+      // Make sure the nav item has relative positioning for absolute positioning of the indicator
+      item.style.position = 'relative';
+      item.appendChild(indicator);
+    }
+  });
+}
+
+// Create a page to display all notes for printing
+function createPrintableNotesPage() {
+  // Create a new window for the printable notes
+  const printWindow = window.open('', '_blank');
+  
+  // Write the HTML content for the printable page
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html dir="rtl">
+    <head>
+      <title> 07-2025 הערות לבחינה</title>
+      <meta charset="UTF-8">
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          padding: 20px;
+          direction: rtl;
+        }
+        .notes-title {
+          text-align: center;
+          font-size: 24px;
+          margin-bottom: 30px;
+          font-weight: bold;
+        }
+        .question-notes {
+          margin-bottom: 20px;
+          padding: 15px;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          break-inside: avoid;
+        }
+        .question-number {
+          font-weight: bold;
+          margin-bottom: 10px;
+          font-size: 18px;
+          border-bottom: 1px solid #eee;
+          padding-bottom: 5px;
+        }
+        .notes-content {
+          white-space: pre-wrap;
+          padding: 10px;
+          background-color: #f9f9f9;
+          border-radius: 4px;
+          min-height: 40px;
+        }
+        @media print {
+          body {
+            font-size: 12pt;
+          }
+          .no-print {
+            display: none;
+          }
+          .question-notes {
+            page-break-inside: avoid;
+          }
+        }
+        .print-btn {
+          display: block;
+          margin: 20px auto;
+          padding: 10px 20px;
+          background-color: #4a90e2;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 16px;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="notes-title">07-2025 הערות לבחינה</div>
+      <button class="print-btn no-print" onclick="window.print()">הדפס הערות</button>
+      <div id="notes-container"></div>
+      <button class="print-btn no-print" onclick="window.print()">הדפס הערות</button>
+    </body>
+    </html>
+  `);
+  
+  // Add all notes to the container
+  const notesContainer = printWindow.document.getElementById('notes-container');
+  let hasNotes = false;
+  
+  // Sort question IDs numerically
+  const questionIds = Object.keys(questionNotes)
+    .map(id => parseInt(id))
+    .sort((a, b) => a - b);
+  
+  for (const questionId of questionIds) {
+    const noteText = questionNotes[questionId];
+    if (noteText && noteText.trim()) {
+      hasNotes = true;
+      
+      const questionNotesDiv = printWindow.document.createElement('div');
+      questionNotesDiv.className = 'question-notes';
+      
+      const questionNumberDiv = printWindow.document.createElement('div');
+      questionNumberDiv.className = 'question-number';
+      questionNumberDiv.textContent = `שאלה ${questionId}`;
+      
+      const notesContentDiv = printWindow.document.createElement('div');
+      notesContentDiv.className = 'notes-content';
+      notesContentDiv.textContent = noteText;
+      
+      questionNotesDiv.appendChild(questionNumberDiv);
+      questionNotesDiv.appendChild(notesContentDiv);
+      notesContainer.appendChild(questionNotesDiv);
+    }
+  }
+  
+  // If no notes exist, show a message
+  if (!hasNotes) {
+    const noNotesMessage = printWindow.document.createElement('div');
+    noNotesMessage.style.textAlign = 'center';
+    noNotesMessage.style.margin = '50px 0';
+    noNotesMessage.style.fontSize = '18px';
+    noNotesMessage.style.color = '#666';
+    noNotesMessage.textContent = 'אין הערות שמורות לבחינה זו';
+    notesContainer.appendChild(noNotesMessage);
+  }
+  
+  // Focus the new window
+  printWindow.focus();
+}
+
+// Modify the addPrintNotesButton function to place the button properly
+function addPrintNotesButton() {
+  const resultsContainer = document.getElementById('results-container');
+  if (!resultsContainer) return;
+  
+  // Check if button already exists
+  if (document.getElementById('print-notes-btn')) return;
+  
+  const printNotesBtn = document.createElement('button');
+  printNotesBtn.id = 'print-notes-btn';
+  printNotesBtn.className = 'return-to-exam no-print';
+  printNotesBtn.textContent = 'הדפס הערות';
+  printNotesBtn.style.backgroundColor = '#4a90e2';
+  printNotesBtn.style.display = 'block';
+  printNotesBtn.style.margin = '20px auto';
+  printNotesBtn.onclick = createPrintableNotesPage;
+  
+  // Get the return button
+  const returnBtn = document.getElementById('return-btn');
+  const printBtn = document.getElementById('print-btn');
+  
+  if (returnBtn && printBtn) {
+    // Add it after the return button, before print button
+    resultsContainer.insertBefore(printNotesBtn, printBtn);
+  } else {
+    // Just append it if the other buttons aren't found
+    resultsContainer.appendChild(printNotesBtn);
+  }
+}
+
+// Add CSS for print media
+function addNoteStyles() {
+  const style = document.createElement('style');
+  style.textContent = `
+    @media print {
+      #toggle-notes-btn, #notes-sidebar {
+        display: none !important;
+      }
+    }
+    
+    @media screen and (max-width: 768px) {
+      #notes-sidebar {
+        width: 250px !important;
+      }
+      #toggle-notes-btn {
+        font-size: 0.9em !important;
+        padding: 5px 10px !important;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+	// Create a helper function to ensure notes sync when changing questions
+function changeQuestion(newIndex) {
+  if (notesVisible) {
+    closeNotes();
+  }
+  currentQuestionIndex = newIndex;
+  resetShowingAnswers();
+  renderCurrentQuestion();
+  updateControls();
+}
+
+	// Create a helper function to ensure notes sync when changing questions
+function changeQuestion(newIndex) {
+  if (notesVisible) {
+    closeNotes();
+  }
+  currentQuestionIndex = newIndex;
+  resetShowingAnswers();
+  renderCurrentQuestion();
+  updateControls();
+}
+// Override existing functions to integrate notes functionality
+
+// Modified nextQuestion function to handle notes
+const originalNextQuestion = nextQuestion;
+nextQuestion = function() {
+  if (currentQuestionIndex < questions.length - 1) {
+    changeQuestion(currentQuestionIndex + 1);
+  }
+};
+
+// Modified prevQuestion function to handle notes
+const originalPrevQuestion = prevQuestion;
+prevQuestion = function() {
+  if (currentQuestionIndex > 0) {
+    changeQuestion(currentQuestionIndex - 1);
+  }
+};
+
+// Modified renderStudyMode function to add notes in study mode
+const originalRenderStudyMode = renderStudyMode;
+renderStudyMode = function() {
+  originalRenderStudyMode();
+  // Add notes to study mode
+  setTimeout(addNotesToStudyMode, 100);
+};
+
+// Modified setMode function to handle study mode
+const originalSetMode = setMode;
+setMode = function(newMode) {
+  originalSetMode(newMode);
+  
+  // Handle notes panel visibility based on mode
+  const toggleButton = document.getElementById('toggle-notes-btn');
+  if (toggleButton) {
+    if (mode === 'study') {
+      toggleButton.style.display = 'none';
+      closeNotes();
+    } else {
+      toggleButton.style.display = 'block';
+    }
+  }
+};
+
+// Modified showResults function to hide the notes button
+const originalShowResults = showResults;
+showResults = function() {
+  // First hide the notes toggle button
+  const toggleButton = document.getElementById('toggle-notes-btn');
+  if (toggleButton) {
+    toggleButton.style.display = 'none';
+  }
+  
+  // Close notes panel if it's open
+  closeNotes();
+  
+  // Call the original function
+  originalShowResults();
+  
+  // Add print notes button to results
+  setTimeout(addPrintNotesButton, 100);
+};
+
+// Initialize the notes functionality
+window.addEventListener('load', function() {
+  loadNotes();
+  addNotesPanel();
+  addNoteStyles();
+  updateNavIndicators();
+});
+	// Store references data for the exam
+let questionReferences = {};
+
+// Function to load references when the page loads
+function loadReferences() {
+  // Create URL for the references page
+  const referencesUrl = "https://israeliumd.github.io/ophthalmology-index/07-2025-references.html";
+  
+  // Fetch the references HTML
+  fetch(referencesUrl)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Failed to fetch references (${response.status})`);
+      }
+      return response.text();
+    })
+    .then(html => {
+      // Create a temporary DOM element to parse the HTML
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+      
+      // Get the references table
+      const table = doc.querySelector('table');
+      if (table) {
+        // Extract references from table rows
+        const rows = table.querySelectorAll('tbody tr');
+        rows.forEach(row => {
+          const cells = row.querySelectorAll('td');
+          if (cells.length >= 3) {
+            const questionNumber = cells[0].textContent.trim();
+            const reference = cells[2].textContent.trim();
+            questionReferences[questionNumber] = reference;
+          }
+        });
+        
+        console.log('References loaded successfully:', Object.keys(questionReferences).length);
+        
+        // If notes panel is already visible, update it to show references
+        if (notesVisible) {
+          updateNotesContent();
+        }
+        
+        // Update study mode if active
+        if (mode === 'study') {
+          setTimeout(addNotesToStudyMode, 100);
+        }
+      }
+    })
+    .catch(error => {
+      console.error('Error loading references:', error);
+    });
+}
+
+// Override the existing updateNotesContent function
+const originalUpdateNotesContent = updateNotesContent;
+updateNotesContent = function() {
+  if (!notesVisible) return;
+  
+  const notesContent = document.getElementById('notes-content');
+  const question = questions[currentQuestionIndex];
+  const questionId = question.id;
+  
+  // Clear previous content
+  notesContent.innerHTML = '';
+  
+  // Create the question number display
+  const questionNumber = document.createElement('div');
+  questionNumber.textContent = `שאלה ${questionId}`;
+  questionNumber.style.fontWeight = 'bold';
+  questionNumber.style.marginBottom = '10px';
+  questionNumber.style.textAlign = 'center';
+  questionNumber.style.fontFamily = 'Arial, sans-serif';
+  notesContent.appendChild(questionNumber);
+  
+  // Add reference information if available
+  if (questionReferences[questionId]) {
+    const referenceInfo = document.createElement('div');
+    referenceInfo.className = 'reference-info';
+    referenceInfo.textContent = questionReferences[questionId];
+    referenceInfo.style.backgroundColor = '#f0f8ff';
+    referenceInfo.style.padding = '8px';
+    referenceInfo.style.marginBottom = '10px';
+    referenceInfo.style.borderRadius = '4px';
+    referenceInfo.style.borderRight = '3px solid #4a90e2';
+    referenceInfo.style.fontFamily = 'Arial, sans-serif';
+    referenceInfo.style.fontSize = '0.9em';
+    referenceInfo.style.direction = 'rtl';
+    notesContent.appendChild(referenceInfo);
+  }
+  
+  // Create the notes textarea
+  const notesTextarea = document.createElement('textarea');
+  notesTextarea.id = `notes-${questionId}`;
+  notesTextarea.value = questionNotes[questionId] || '';
+  notesTextarea.placeholder = 'רשום את ההערות שלך כאן...';
+  notesTextarea.style.width = '100%';
+  notesTextarea.style.height = questionReferences[questionId] ? 'calc(100vh - 200px)' : 'calc(100vh - 150px)';
+  notesTextarea.style.padding = '10px';
+  notesTextarea.style.borderRadius = '4px';
+  notesTextarea.style.border = '1px solid #ddd';
+  notesTextarea.style.fontFamily = 'Arial, sans-serif';
+  notesTextarea.style.fontSize = '1em';
+  notesTextarea.style.direction = 'rtl';
+  notesTextarea.style.resize = 'none';
+  notesTextarea.style.boxSizing = 'border-box';
+  
+  // Add event listener to save notes when text changes
+  notesTextarea.addEventListener('input', function() {
+    questionNotes[questionId] = this.value;
+    saveNotes();
+    updateNavIndicators();
+  });
+  
+  notesContent.appendChild(notesTextarea);
+};
+
+// Override the existing addNotesToStudyMode function
+const originalAddNotesToStudyMode = addNotesToStudyMode;
+addNotesToStudyMode = function() {
+  const questionContainers = document.querySelectorAll('.question-container');
+  questionContainers.forEach(container => {
+    const questionNumberElem = container.querySelector('.question-number');
+    if (questionNumberElem) {
+      const questionIdMatch = questionNumberElem.textContent.match(/\d+/);
+      if (questionIdMatch) {
+        const questionId = parseInt(questionIdMatch[0]);
+        const questionNoteText = questionNotes[questionId] || '';
+        
+        // Remove any existing notes container
+        const existingNotes = container.querySelector('.study-notes-container');
+        if (existingNotes) {
+          existingNotes.remove();
+        }
+        
+        // Only add notes container if there are notes or a reference exists
+        if (questionNoteText.trim() || questionReferences[questionId]) {
+          const notesContainer = document.createElement('div');
+          notesContainer.className = 'study-notes-container';
+          notesContainer.style.marginTop = '20px';
+          notesContainer.style.padding = '10px';
+          notesContainer.style.backgroundColor = '#f0f8ff';
+          notesContainer.style.borderRadius = '8px';
+          notesContainer.style.border = '1px solid #b0c4de';
+          
+          let notesHTML = '<div style="font-weight: bold; margin-bottom: 5px; font-family: Arial, sans-serif;">הערות אישיות:</div>';
+          
+          // Add reference if available
+          if (questionReferences[questionId]) {
+            notesHTML += `<div style="padding: 8px; margin-bottom: 10px; background-color: #e6f2ff; border-radius: 4px; border-right: 3px solid #4a90e2; font-family: Arial, sans-serif; font-size: 0.9em; direction: rtl;">${questionReferences[questionId]}</div>`;
+          }
+          
+          // Add user notes if available
+          if (questionNoteText.trim()) {
+            notesHTML += `<div style="padding: 10px; border: 1px solid #ddd; border-radius: 4px; background-color: #fff; direction: rtl; white-space: pre-wrap; font-family: Arial, sans-serif;">${questionNoteText}</div>`;
+          }
+          
+          notesContainer.innerHTML = notesHTML;
+          container.appendChild(notesContainer);
+        }
+      }
+    }
+  });
+};
+
+// Override the existing createPrintableNotesPage function
+const originalCreatePrintableNotesPage = createPrintableNotesPage;
+createPrintableNotesPage = function() {
+  // Create a new window for the printable notes
+  const printWindow = window.open('', '_blank');
+  
+  // Write the HTML content for the printable page
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html dir="rtl">
+    <head>
+      <title>הערות לבחינה 07-2025</title>
+      <meta charset="UTF-8">
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          padding: 20px;
+          direction: rtl;
+        }
+        .notes-title {
+          text-align: center;
+          font-size: 24px;
+          margin-bottom: 30px;
+          font-weight: bold;
+        }
+        .question-notes {
+          margin-bottom: 20px;
+          padding: 15px;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          break-inside: avoid;
+        }
+        .question-number {
+          font-weight: bold;
+          margin-bottom: 10px;
+          font-size: 18px;
+          border-bottom: 1px solid #eee;
+          padding-bottom: 5px;
+        }
+        .reference-info {
+          padding: 8px;
+          margin-bottom: 10px;
+          background-color: #e6f2ff;
+          border-radius: 4px;
+          border-right: 3px solid #4a90e2;
+          font-size: 0.9em;
+        }
+        .notes-content {
+          white-space: pre-wrap;
+          padding: 10px;
+          background-color: #f9f9f9;
+          border-radius: 4px;
+          min-height: 40px;
+        }
+        @media print {
+          body {
+            font-size: 12pt;
+          }
+          .no-print {
+            display: none;
+          }
+          .question-notes {
+            page-break-inside: avoid;
+          }
+        }
+        .print-btn {
+          display: block;
+          margin: 20px auto;
+          padding: 10px 20px;
+          background-color: #4a90e2;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 16px;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="notes-title">הערות לבחינה 07-2025</div>
+      <button class="print-btn no-print" onclick="window.print()">הדפס הערות</button>
+      <div id="notes-container"></div>
+      <button class="print-btn no-print" onclick="window.print()">הדפס הערות</button>
+    </body>
+    </html>
+  `);
+  
+  // Add all notes to the container
+  const notesContainer = printWindow.document.getElementById('notes-container');
+  let hasNotes = false;
+  
+  // Sort question IDs numerically
+  const questionIds = Object.keys(questionNotes)
+    .map(id => parseInt(id))
+    .filter(id => questionNotes[id]?.trim() || questionReferences[id])
+    .sort((a, b) => a - b);
+  
+  for (const questionId of questionIds) {
+    const noteText = questionNotes[questionId] || '';
+    hasNotes = true;
+    
+    const questionNotesDiv = printWindow.document.createElement('div');
+    questionNotesDiv.className = 'question-notes';
+    
+    const questionNumberDiv = printWindow.document.createElement('div');
+    questionNumberDiv.className = 'question-number';
+    questionNumberDiv.textContent = `שאלה ${questionId}`;
+    
+    questionNotesDiv.appendChild(questionNumberDiv);
+    
+    // Add reference if available
+    if (questionReferences[questionId]) {
+      const referenceDiv = printWindow.document.createElement('div');
+      referenceDiv.className = 'reference-info';
+      referenceDiv.textContent = questionReferences[questionId];
+      questionNotesDiv.appendChild(referenceDiv);
+    }
+    
+    // Add notes content if available
+    if (noteText.trim()) {
+      const notesContentDiv = printWindow.document.createElement('div');
+      notesContentDiv.className = 'notes-content';
+      notesContentDiv.textContent = noteText;
+      questionNotesDiv.appendChild(notesContentDiv);
+    }
+    
+    notesContainer.appendChild(questionNotesDiv);
+  }
+  
+  // If no notes exist, show a message
+  if (!hasNotes) {
+    const noNotesMessage = printWindow.document.createElement('div');
+    noNotesMessage.style.textAlign = 'center';
+    noNotesMessage.style.margin = '50px 0';
+    noNotesMessage.style.fontSize = '18px';
+    noNotesMessage.style.color = '#666';
+    noNotesMessage.textContent = 'אין הערות שמורות לבחינה זו';
+    notesContainer.appendChild(noNotesMessage);
+  }
+  
+  // Focus the new window
+  printWindow.focus();
+};
+
+// Add this to your window.onload function or existing initialization
+const originalWindowOnload = window.onload;
+window.onload = function() {
+  // Call the original onload function if it exists
+  if (typeof originalWindowOnload === 'function') {
+    originalWindowOnload();
+  } else {
+    // Otherwise initialize the app ourselves
+    generateSidebarNavigation();
+    init();
+  }
+  
+  // Load references after the app has initialized
+  loadReferences();
+	 // Load exam state if available
+  setTimeout(() => {
+    loadExamState();
+  }, 100);
+};
+	  // Create comprehensive exam summary page for printing
+function createComprehensiveSummary() {
+  // Create a new window for the comprehensive summary
+  const summaryWindow = window.open('', '_blank');
+  
+  // Get the current page URL to construct proper image paths
+  const currentPath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+  const imageBasePath = window.location.origin + currentPath + '/images/';
+  
+  // Write the HTML content for the comprehensive summary page
+  summaryWindow.document.write(`
+    <!DOCTYPE html>
+    <html dir="rtl">
+    <head>
+      <title>סיכום בחינה 07-2025</title>
+      <meta charset="UTF-8">
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          padding: 20px;
+          direction: rtl;
+          background-color: #f5f5f5;
+        }
+        .summary-title {
+          text-align: center;
+          font-size: 24px;
+          margin-bottom: 30px;
+          font-weight: bold;
+        }
+        .question-container {
+          background-color: white;
+          border-radius: 8px;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+          padding: 20px;
+          margin-bottom: 20px;
+          break-inside: avoid;
+        }
+        .question-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 15px;
+        }
+        .question-number {
+          font-weight: bold;
+          font-size: 1.2em;
+        }
+        .result-indicator {
+          font-size: 1.5em;
+          font-weight: bold;
+        }
+        .result-indicator.correct {
+          color: #4caf50;
+        }
+        .result-indicator.incorrect {
+          color: #f44336;
+        }
+        .result-indicator.unanswered {
+          color: #999;
+        }
+        .image-container {
+          text-align: center;
+          margin: 15px 0;
+        }
+        .image-container img {
+          max-width: 100%;
+          max-height: auto;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+        }
+        .multiple-images-container {
+          display: flex;
+          justify-content: center;
+          flex-wrap: wrap;
+          gap: 15px;
+          margin: 15px 0;
+        }
+        .image-label {
+          text-align: center;
+          font-weight: bold;
+          margin-bottom: 5px;
+        }
+        .options {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          margin-bottom: 15px;
+        }
+        .option {
+          padding: 10px;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          display: flex;
+          align-items: flex-start;
+        }
+        .option.correct {
+          border-color: #4caf50;
+          background-color: #e8f5e9;
+          font-weight: bold;
+        }
+        .option.incorrect {
+          border-color: #f44336;
+          background-color: #ffebee;
+          font-weight: bold;
+        }
+        .option-label {
+          font-weight: bold;
+          margin-left: 10px;
+          min-width: 20px;
+        }
+        .notes-section {
+          margin-top: 15px;
+          padding: 10px;
+          background-color: #f0f8ff;
+          border-radius: 8px;
+          border-right: 3px solid #4a90e2;
+        }
+        .notes-title {
+          font-weight: bold;
+          margin-bottom: 5px;
+          color: #4a90e2;
+        }
+        .reference-info {
+          padding: 8px;
+          margin-bottom: 10px;
+          background-color: #e6f2ff;
+          border-radius: 4px;
+          border-right: 3px solid #4a90e2;
+          font-size: 0.9em;
+        }
+        .notes-content {
+          padding: 10px;
+          background-color: #fff;
+          border-radius: 4px;
+          border: 1px solid #ddd;
+          white-space: pre-wrap;
+          line-height: 1.6;
+        }
+        .ltr-text {
+          direction: ltr;
+          text-align: left;
+        }
+        .print-controls {
+          text-align: center;
+          margin: 20px 0;
+        }
+        .print-btn {
+          display: block;
+          margin: 20px auto;
+          padding: 10px 20px;
+          background-color: #4a90e2;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 16px;
+        }
+        @media print {
+          .no-print {
+            display: none;
+          }
+          body {
+            font-size: 12pt;
+          }
+          .question-container {
+            page-break-inside: avoid;
+          }
+        }
+      </style>
+    </head>
+    <body>
+      <div class="summary-title">סיכום בחינה 07-2025</div>
+      <button class="print-btn no-print" onclick="window.print()">הדפס סיכום</button>
+      <div id="summary-container"></div>
+      <button class="print-btn no-print" onclick="window.print()">הדפס סיכום</button>
+    </body>
+    </html>
+  `);
+  
+  // Add all questions to the container
+  const summaryContainer = summaryWindow.document.getElementById('summary-container');
+  let hasContent = false;
+  
+  // Sort question IDs numerically
+  const sortedQuestions = questions.sort((a, b) => a.id - b.id);
+  
+  for (const question of sortedQuestions) {
+    hasContent = true;
+    const selectedAnswer = selectedAnswers[question.id];
+    const isCorrect = selectedAnswer === question.correctAnswer;
+    const wasAnswered = selectedAnswer !== undefined;
+    
+    // Determine result indicator
+    let resultIndicator = '';
+    let resultClass = '';
+    if (!wasAnswered) {
+      resultIndicator = '-';
+      resultClass = 'unanswered';
+    } else if (isCorrect) {
+      resultIndicator = '✓';
+      resultClass = 'correct';
+    } else {
+      resultIndicator = '✗';
+      resultClass = 'incorrect';
+    }
+    
+    const questionContainer = summaryWindow.document.createElement('div');
+    questionContainer.className = 'question-container';
+    
+    // Question header with number and result indicator
+    const questionHeader = summaryWindow.document.createElement('div');
+    questionHeader.className = 'question-header';
+    
+    const questionNumber = summaryWindow.document.createElement('div');
+    questionNumber.className = 'question-number';
+    questionNumber.textContent = `שאלה ${question.id}`;
+    
+    const resultIndicatorDiv = summaryWindow.document.createElement('div');
+    resultIndicatorDiv.className = `result-indicator ${resultClass}`;
+    resultIndicatorDiv.textContent = resultIndicator;
+    
+    questionHeader.appendChild(questionNumber);
+    questionHeader.appendChild(resultIndicatorDiv);
+    questionContainer.appendChild(questionHeader);
+    
+    // Question text
+    const questionText = summaryWindow.document.createElement('div');
+    questionText.className = 'question-text';
+    questionText.textContent = question.text;
+    questionContainer.appendChild(questionText);
+    
+    // Images
+    if (question.image) {
+      const imageContainer = summaryWindow.document.createElement('div');
+      imageContainer.className = 'image-container';
+      const img = summaryWindow.document.createElement('img');
+      img.src = imageBasePath + question.image;
+      img.alt = `תמונה לשאלה ${question.id}`;
+      imageContainer.appendChild(img);
+      questionContainer.appendChild(imageContainer);
+    } else if (question.multipleImages) {
+      const multipleImagesContainer = summaryWindow.document.createElement('div');
+      multipleImagesContainer.className = 'multiple-images-container';
+      
+      for (let i = 0; i < question.images.length; i++) {
+        const imageContainer = summaryWindow.document.createElement('div');
+        imageContainer.className = 'image-container';
+        
+        const imageLabel = summaryWindow.document.createElement('div');
+        imageLabel.className = 'image-label';
+        imageLabel.textContent = question.imageLabels[i];
+        
+        const img = summaryWindow.document.createElement('img');
+        img.src = imageBasePath + question.images[i];
+        img.alt = `תמונה ${i+1} לשאלה ${question.id}`;
+        
+        imageContainer.appendChild(imageLabel);
+        imageContainer.appendChild(img);
+        multipleImagesContainer.appendChild(imageContainer);
+      }
+      questionContainer.appendChild(multipleImagesContainer);
+    }
+    
+    // Options
+    const optionsDiv = summaryWindow.document.createElement('div');
+    optionsDiv.className = 'options';
+    
+    Object.entries(question.options).forEach(([key, value]) => {
+      const optionDiv = summaryWindow.document.createElement('div');
+      optionDiv.className = 'option';
+      
+      // Determine option styling
+      if (key === question.correctAnswer) {
+        optionDiv.classList.add('correct');
+      } else if (key === selectedAnswer && selectedAnswer !== question.correctAnswer) {
+        optionDiv.classList.add('incorrect');
+      }
+      
+      const optionLabel = summaryWindow.document.createElement('div');
+      optionLabel.className = 'option-label';
+      optionLabel.textContent = key;
+      
+      const optionText = summaryWindow.document.createElement('div');
+      optionText.className = 'option-text';
+      optionText.textContent = value;
+      
+      optionDiv.appendChild(optionLabel);
+      optionDiv.appendChild(optionText);
+      optionsDiv.appendChild(optionDiv);
+    });
+    
+    questionContainer.appendChild(optionsDiv);
+    
+    // Notes section (if there are notes or references)
+    const hasNotes = questionNotes[question.id] && questionNotes[question.id].trim();
+    const hasReference = questionReferences[question.id];
+    
+    if (hasNotes || hasReference) {
+      const notesSection = summaryWindow.document.createElement('div');
+      notesSection.className = 'notes-section';
+      
+      const notesTitle = summaryWindow.document.createElement('div');
+      notesTitle.className = 'notes-title';
+      notesTitle.textContent = 'הערות:';
+      notesSection.appendChild(notesTitle);
+      
+      // Add reference if available
+      if (hasReference) {
+        const referenceDiv = summaryWindow.document.createElement('div');
+        referenceDiv.className = 'reference-info';
+        referenceDiv.textContent = questionReferences[question.id];
+        notesSection.appendChild(referenceDiv);
+      }
+      
+      // Add user notes if available
+      if (hasNotes) {
+        const notesContent = summaryWindow.document.createElement('div');
+        notesContent.className = 'notes-content';
+        
+        // Simple approach for mixed text - detect if predominantly English
+        const text = questionNotes[question.id];
+        const englishChars = (text.match(/[a-zA-Z]/g) || []).length;
+        const hebrewChars = (text.match(/[\u0590-\u05FF]/g) || []).length;
+        
+        if (englishChars > hebrewChars) {
+          notesContent.classList.add('ltr-text');
+        }
+        
+        notesContent.textContent = text;
+        notesSection.appendChild(notesContent);
+      }
+      
+      questionContainer.appendChild(notesSection);
+    }
+    
+    summaryContainer.appendChild(questionContainer);
+  }
+  
+  // If no content, show a message
+  if (!hasContent) {
+    const noContentMessage = summaryWindow.document.createElement('div');
+    noContentMessage.style.textAlign = 'center';
+    noContentMessage.style.margin = '50px 0';
+    noContentMessage.style.fontSize = '18px';
+    noContentMessage.style.color = '#666';
+    noContentMessage.textContent = 'אין תוכן להצגה';
+    summaryContainer.appendChild(noContentMessage);
+  }
+  
+  // Focus the new window
+  summaryWindow.focus();
+}
+
+// Add comprehensive summary button to results page
+function addComprehensiveSummaryButton() {
+  const resultsContainer = document.getElementById('results-container');
+  if (!resultsContainer) return;
+  
+  // Check if button already exists
+  if (document.getElementById('comprehensive-summary-btn')) return;
+  
+  const comprehensiveSummaryBtn = document.createElement('button');
+  comprehensiveSummaryBtn.id = 'comprehensive-summary-btn';
+  comprehensiveSummaryBtn.className = 'return-to-exam no-print';
+  comprehensiveSummaryBtn.textContent = 'סיכום מפורט להדפסה';
+  comprehensiveSummaryBtn.style.backgroundColor = '#ff9800';
+  comprehensiveSummaryBtn.style.display = 'block';
+  comprehensiveSummaryBtn.style.margin = '20px auto';
+  comprehensiveSummaryBtn.onclick = createComprehensiveSummary;
+  
+  // Get the return button to insert before it
+  const returnBtn = document.getElementById('return-btn');
+  
+  if (returnBtn) {
+    // Add it before the return button
+    resultsContainer.insertBefore(comprehensiveSummaryBtn, returnBtn);
+  } else {
+    // Just append it if the return button isn't found
+    resultsContainer.appendChild(comprehensiveSummaryBtn);
+  }
+}
+
+// Override the existing showResults function to add the comprehensive summary button
+const originalShowResultsForSummary = showResults;
+showResults = function() {
+  // Call the original function
+  originalShowResultsForSummary();
+  
+  // Add comprehensive summary button to results
+  setTimeout(addComprehensiveSummaryButton, 100);
+};
+  </script>
+</body>
+</html>
