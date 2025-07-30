@@ -27,7 +27,7 @@
   left: 0;
   right: 0;
   z-index: 100;
-  padding: 10px 15px;
+  padding: 5px 10px;
   -webkit-overflow-scrolling: touch;
     }
     
@@ -274,8 +274,8 @@
     width: 100%;
     height: auto;
     position: static;
-    padding: 10px 5px;
-    margin-bottom: 10px;
+    padding: 4px 8px;
+    margin-bottom: 0px;
   }
 	  .controls button {
     min-height: 44px;
@@ -290,8 +290,11 @@
   }
   
   .question-nav {
-    grid-template-columns: repeat(10, 1fr);
-    gap: 5px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+  gap: 6px;
+  padding-bottom: 2px;
+  max-width: 100%;
   }
   
   .nav-item {
