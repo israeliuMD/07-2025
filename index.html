@@ -911,7 +911,17 @@ function toggleAnswers() {
     // Show results summary
     function showResults() {
       // Calculate the score
-      const { correct, total } = calculateResultsData();
+let correct = 0;
+let total = Object.keys(selectedAnswers).length;
+
+Object.entries(selectedAnswers).forEach(([questionId, answer]) => {
+  const question = questions.find(q => q.id === parseInt(questionId));
+  if (question && answer === question.correctAnswer) {
+    correct++;
+  }
+});
+
+console.log('Direct calculation:', { correct, total, selectedAnswers });
       const percentage = total > 0 ? Math.round((correct / total) * 100) : 0;
       
       // Get elements
@@ -969,18 +979,19 @@ function toggleAnswers() {
     }
     
     // Calculate results data
-    function calculateResultsData() {
-      let correct = 0;
-      let total = Object.keys(selectedAnswers).length;
-      
-      Object.entries(selectedAnswers).forEach(([questionId, answer]) => {
-        const question = questions.find(q => q.id === parseInt(questionId));
-        if (question && answer === question.correctAnswer) {
-          correct++;
-        }
-      });
-      
-      return { correct, total };
+function calculateResultsData() {
+  let correct = 0;
+  let total = Object.keys(selectedAnswers).length;
+  
+  Object.entries(selectedAnswers).forEach(([questionId, answer]) => {
+    const question = questions.find(q => q.id === parseInt(questionId));
+    if (question && answer === question.correctAnswer) {
+      correct++;
+    }
+  });
+  
+  console.log('Results calculated:', { correct, total, selectedAnswers }); // Debug line
+  return { correct, total };
     }
     
     // Return to the exam
@@ -2560,7 +2571,17 @@ function addComprehensiveSummaryButton() {
 const originalShowResultsForSummary = showResults;
 showResults = function() {
   // Calculate the score first to avoid infinite recursion
-  const { correct, total } = calculateResultsData();
+  let correct = 0;
+let total = Object.keys(selectedAnswers).length;
+
+Object.entries(selectedAnswers).forEach(([questionId, answer]) => {
+  const question = questions.find(q => q.id === parseInt(questionId));
+  if (question && answer === question.correctAnswer) {
+    correct++;
+  }
+});
+
+console.log('Direct calculation:', { correct, total, selectedAnswers });
   const percentage = total > 0 ? Math.round((correct / total) * 100) : 0;
   
   // Get elements
