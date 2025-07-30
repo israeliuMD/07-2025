@@ -908,75 +908,7 @@ function toggleAnswers() {
       return { correct, total };
     }
     
-    // Show results summary
-    function showResults() {
-      // Calculate the score
-let correct = 0;
-let total = Object.keys(selectedAnswers).length;
 
-Object.entries(selectedAnswers).forEach(([questionId, answer]) => {
-  const question = questions.find(q => q.id === parseInt(questionId));
-  if (question && answer === question.correctAnswer) {
-    correct++;
-  }
-});
-
-console.log('Direct calculation:', { correct, total, selectedAnswers });
-      const percentage = total > 0 ? Math.round((correct / total) * 100) : 0;
-      
-      // Get elements
-      const questionContainer = document.getElementById('question-container');
-      const resultsContainer = document.getElementById('results-container');
-      const resultsGrid = document.getElementById('results-grid');
-      const resultsSummary = document.getElementById('results-summary');
-      const controls = document.getElementById('controls');
-      const sidebar = document.getElementById('sidebar');
-      
-      // Hide the question and show results
-      questionContainer.style.display = 'none';
-      resultsContainer.style.display = 'block';
-      controls.style.display = 'none';
-      sidebar.style.display = 'none';
-      
-      // Create the results summary text
-      resultsSummary.innerHTML = `
-        <strong>תשובות נכונות:</strong> ${correct} מתוך ${questions.length} (${percentage}%)<br>
-        <strong>תשובות שגויות:</strong> ${total - correct}<br>
-        <strong>שאלות ללא מענה:</strong> ${questions.length - total}
-      `;
-      
-      // Clear and populate the results grid
-      resultsGrid.innerHTML = '';
-      
-      // Create a grid with all questions
-      for (let i = 0; i < questions.length; i++) {
-        const question = questions[i];
-        const selectedAnswer = selectedAnswers[question.id];
-        
-        let itemClass = 'result-item';
-        if (!selectedAnswer) {
-          itemClass += ' unanswered';
-        } else if (selectedAnswer === question.correctAnswer) {
-          itemClass += ' correct';
-        } else {
-          itemClass += ' incorrect';
-        }
-        
-        const resultItem = document.createElement('div');
-        resultItem.className = itemClass;
-        resultItem.innerHTML = `
-          <div class="result-number">${question.id}</div>
-          <div class="result-answer">${selectedAnswer || '-'}</div>
-        `;
-        
-        // Add click event to jump to that question
-        resultItem.addEventListener('click', function() {
-          returnToExam(question.id - 1);
-        });
-        
-        resultsGrid.appendChild(resultItem);
-      }
-    }
     
     // Calculate results data
 function calculateResultsData() {
@@ -2567,21 +2499,22 @@ function addComprehensiveSummaryButton() {
   }
 }
 
-// Override the existing showResults function to add the comprehensive summary button
-const originalShowResultsForSummary = showResults;
-showResults = function() {
-  // Calculate the score first to avoid infinite recursion
+// Main showResults function - fixed version
+function showResults() {
+  console.log('showResults called, selectedAnswers:', selectedAnswers);
+  
+  // Calculate the score
   let correct = 0;
-let total = Object.keys(selectedAnswers).length;
+  let total = Object.keys(selectedAnswers).length;
 
-Object.entries(selectedAnswers).forEach(([questionId, answer]) => {
-  const question = questions.find(q => q.id === parseInt(questionId));
-  if (question && answer === question.correctAnswer) {
-    correct++;
-  }
-});
+  Object.entries(selectedAnswers).forEach(([questionId, answer]) => {
+    const question = questions.find(q => q.id === parseInt(questionId));
+    if (question && answer === question.correctAnswer) {
+      correct++;
+    }
+  });
 
-console.log('Direct calculation:', { correct, total, selectedAnswers });
+  console.log('Results:', { correct, total });
   const percentage = total > 0 ? Math.round((correct / total) * 100) : 0;
   
   // Get elements
@@ -2597,17 +2530,6 @@ console.log('Direct calculation:', { correct, total, selectedAnswers });
   resultsContainer.style.display = 'block';
   controls.style.display = 'none';
   sidebar.style.display = 'none';
-  
-  // Hide notes toggle button if it exists
-  const toggleButton = document.getElementById('toggle-notes-btn');
-  if (toggleButton) {
-    toggleButton.style.display = 'none';
-  }
-  
-  // Close notes panel if it's open
-  if (typeof closeNotes === 'function') {
-    closeNotes();
-  }
   
   // Create the results summary text
   resultsSummary.innerHTML = `
@@ -2642,18 +2564,12 @@ console.log('Direct calculation:', { correct, total, selectedAnswers });
     
     // Add click event to jump to that question
     resultItem.addEventListener('click', function() {
-      returnToExam(question.id - 1);
+      returnToExam(i);
     });
     
     resultsGrid.appendChild(resultItem);
   }
-  
-  // Add comprehensive summary button to results
-  setTimeout(addComprehensiveSummaryButton, 100);
-  
-  // Add print notes button to results
-  setTimeout(addPrintNotesButton, 100);
-};
+}
   </script>
 </body>
 </html>
