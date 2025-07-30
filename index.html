@@ -783,7 +783,9 @@ function prevQuestion() {
 function resetShowingAnswers() {
   showingAnswers = false;
   const btn = document.getElementById('toggle-answers-btn');
+  const btnBottom = document.getElementById('toggle-answers-btn-bottom');
   if (btn) btn.textContent = 'הצג תשובות';
+  if (btnBottom) btnBottom.textContent = 'הצג תשובות';
   document.getElementById('score-display').style.display = 'none';
 }
     // Update navigation button states
@@ -860,8 +862,8 @@ function toggleAnswers() {
   const btnBottom = document.getElementById('toggle-answers-btn-bottom');
   const newText = showingAnswers ? 'הסתר תשובות' : 'הצג תשובות';
   
-  btn.textContent = newText;
-  btnBottom.textContent = newText;
+  if (btn) btn.textContent = newText;
+  if (btnBottom) btnBottom.textContent = newText;
   
   if (showingAnswers) {
     calculateAndShowScore();
