@@ -6,24 +6,29 @@
   <title>בחינת מחלות עיניים</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f5f5f5;
-      display: flex;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f5f5f5;
+  display: flex;
+  -webkit-overflow-scrolling: touch;
+  overflow-x: hidden;
     }
     
     .sidebar {
-      width: 250px;
-      height: 100vh;
-      background-color: #fff;
-      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-      overflow-y: auto;
-      position: fixed;
-      right: 0;
-      top: 0;
-      z-index: 100;
-      padding: 15px 10px;
+  width: 100%;
+  height: auto;
+  background-color: #fff;
+  box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  overflow-y: visible;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 10px 15px;
+  -webkit-overflow-scrolling: touch;
     }
     
     .sidebar-title {
@@ -35,20 +40,26 @@
     }
     
     .question-nav {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 10px;
-	  padding-bottom: 25px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+  gap: 8px;
+  padding-bottom: 5px;
+  max-width: 100%;
     }
     
     .nav-item {
-      text-align: center;
-      padding: 8px 0;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 15px;
-      background-color: white;
+  text-align: center;
+  padding: 6px 4px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  background-color: white;
+  min-width: 40px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
     }
     
     .nav-item:hover {
@@ -68,10 +79,11 @@
     
 .main-content {
   margin-top: 60px;
-  margin-right: 350px;
+  margin-bottom: 120px;
   padding: 50px;
   max-width: 800px;
   margin-left: auto;
+  margin-right: auto;
 }
     .question-container {
       background-color: white;
@@ -265,6 +277,17 @@
     padding: 10px 5px;
     margin-bottom: 10px;
   }
+	  .controls button {
+    min-height: 44px;
+    padding: 10px 16px;
+    font-size: 16px;
+  }
+  
+  .control-panel button {
+    min-height: 40px;
+    padding: 8px 12px;
+    font-size: 14px;
+  }
   
   .question-nav {
     grid-template-columns: repeat(10, 1fr);
@@ -290,10 +313,16 @@
   .image-container img {
     max-width: 100%;
     height: auto;
+    border-radius: 8px;
   }
   
   .multiple-images-container {
-    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .multiple-images-container .image-container {
+    flex: 1;
+    min-width: 0;
   }
   
   .option {
@@ -327,6 +356,19 @@
   
   .results-grid {
     grid-template-columns: repeat(3, 1fr);
+  }
+	  .multiple-images-container {
+    flex-direction: column;
+  }
+  
+  .controls {
+    padding: 10px;
+    gap: 15px;
+  }
+  
+  .controls button {
+    flex: 1;
+    max-width: 120px;
   }
 }
 
@@ -1784,11 +1826,11 @@ showResults = function() {
 };
 
 // Initialize the notes functionality
-window.addEventListener('load', function() {
-  loadNotes();
-  addNotesPanel();
-  addNoteStyles();
-  updateNavIndicators();
+//window.addEventListener('load', function() {  // ביטלתי זמנית הערות עם דאבל סלאש בתחילת וסוף השורה
+//  loadNotes();  // ביטלתי זמנית הערות עם דאבל סלאש בתחילת וסוף השורה
+//  addNotesPanel();  // ביטלתי זמנית הערות עם דאבל סלאש בתחילת וסוף השורה
+//  addNoteStyles();  // ביטלתי זמנית הערות עם דאבל סלאש בתחילת וסוף השורה
+//  updateNavIndicators();  // ביטלתי זמנית הערות עם דאבל סלאש בתחילת וסוף השורה
 });
 	// Store references data for the exam
 let questionReferences = {};
@@ -2111,7 +2153,7 @@ window.onload = function() {
   }
   
   // Load references after the app has initialized
-  loadReferences();
+//  loadReferences();  // ביטלתי זמנית הערות עם דאבל סלאש בתחילת וסוף השורה
 	 // Load exam state if available
   setTimeout(() => {
     loadExamState();
