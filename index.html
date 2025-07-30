@@ -482,7 +482,7 @@
   <div>
     <button id="toggle-answers-btn-bottom" onclick="toggleAnswers()" style="display: none;">הצג תשובות</button>
     <span id="question-counter"></span>
-    <button id="finish-btn" onclick="showResults()" class="finish-btn" style="display: none;">סיים בחינה</button>
+    <button id="finish-btn-bottom" onclick="showResults()" class="finish-btn" style="display: none;">סיים בחינה</button>
   </div>
   <button id="next-btn" onclick="nextQuestion()">הבא</button>
 </div>
@@ -692,8 +692,12 @@
       document.getElementById('question-counter').textContent = `${currentQuestionIndex + 1} / ${questions.length}`;
       
       // Show Finish button only on the last question
-      document.getElementById('finish-btn').style.display = 
-        currentQuestionIndex === questions.length - 1 ? 'inline-block' : 'none';
+const finishBtnTop = document.getElementById('finish-btn');
+const finishBtnBottom = document.getElementById('finish-btn-bottom');
+const displayValue = currentQuestionIndex === questions.length - 1 ? 'inline-block' : 'none';
+
+if (finishBtnTop) finishBtnTop.style.display = displayValue;
+if (finishBtnBottom) finishBtnBottom.style.display = displayValue;
     }
     
     function renderStudyMode() {
